@@ -1,35 +1,38 @@
-using System;
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using System;
 
-namespace logchamp;
-
-public class Configuration : IPluginConfiguration
+namespace logchamp
 {
-    public int Version { get; set; }
-    public string LogsDirectory { get; set; } = Environment.ExpandEnvironmentVariables("%AppData%\\Advanced Combat Tracker\\FFXIVLogs");
-    public string DeucalionDirectory { get; set; } = Environment.ExpandEnvironmentVariables("%AppData%\\deucalion");
-    
-    public enum Timeframe
+    [Serializable]
+    public class Configuration : IPluginConfiguration
     {
-        Seven,
-        Fourteen,
-        Thirty,
-        Sixty,
-        Ninety
-    }
-    
-    public Timeframe DeleteAfterTimeframe = Timeframe.Thirty;
+        public int Version { get; set; }
+        public string ActDirectory { get; set; } = $@"C:\Users\{Environment.UserName}\AppData\Roaming\Advanced Combat Tracker\FFXIVLogs";
+        public string DeucalionDirectory { get; set; } = Environment.ExpandEnvironmentVariables("%AppData%\\deucalion");
+        public string IinactDirectory { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\IINACT";
+        public enum Timeframe
+        {
+            Seven,
+            Fourteen,
+            Thirty,
+            Sixty,
+            Ninety
+        }
 
-    private DalamudPluginInterface _pluginInterface;
+        public Timeframe DeleteAfterTimeframeAct { get; set; } = Timeframe.Thirty;
+        public Timeframe DeleteAfterTimeframeIinact { get; set; } = Timeframe.Thirty;
 
-    public void Initialize(DalamudPluginInterface pInterface)
-    {
-        _pluginInterface = pInterface;
-    }
+        private DalamudPluginInterface _pluginInterface;
 
-    public void Save()
-    {
-        _pluginInterface.SavePluginConfig(this);
+        public void Initialize(DalamudPluginInterface pInterface)
+        {
+            _pluginInterface = pInterface;
+        }
+
+        public void Save()
+        {
+            _pluginInterface.SavePluginConfig(this);
+        }
     }
 }
